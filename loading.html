@@ -1,0 +1,71 @@
+ <!DOCTYPE html>
+<html>
+<style>
+    .loading, .loading::before, .loading::after {
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+}
+
+.loading {
+	width: 500px;
+	height: 500px;
+	margin: auto;
+	background: url("https://i.imgur.com/jIQAYPO.png") no-repeat 100%/100%;
+	color: white;
+}
+
+.loading::before, .loading::after {
+	content: '';
+	z-index: -1;
+	box-shadow: inset 0px 0px 0px 4px;
+	animation: clip 4s linear infinite;
+}
+
+@keyframes clip {
+	0% {
+		clip: rect(0px, 500px, 2px, 0px);
+	}
+
+	25% {
+		clip: rect(0px, 2px, 500px, 0px);
+	}
+
+	50% {
+		clip: rect(498px, 500px, 500px, 0px);
+	}
+
+	75% {
+		clip: rect(0px, 500px, 500px, 498px);
+	}
+
+	100% {
+		clip: rect(0px, 500px, 2px, 0px);
+	}
+}
+
+html,
+body {
+	height: 100%;
+}
+
+body {
+	position: relative;
+	background-color: #121212;
+	overflow: hidden;
+}
+</style>
+<body>
+	<label id="lblStatus" style="color: whitesmoke" ></label>
+	<script type="text/javascript">
+		function SetStatusChanged( status )
+		{
+			document.getElementById('lblStatus').innerHTML = ( status + "<br>");
+		}
+
+	</script>
+</body>
+<div class="loading"> </div>
+</html> 
