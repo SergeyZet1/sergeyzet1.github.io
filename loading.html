@@ -1,71 +1,80 @@
- <!DOCTYPE html>
 <html>
-<style>
-    .loading, .loading::before, .loading::after {
-	position: absolute;
-	top: 0;
-	bottom: 0;
-	left: 0;
-	right: 0;
-}
+	<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+	<body style="overflow: hidden; margin: 0;">
+		<canvas id="canvas"></canvas>
+		<script type="text/javascript">
+			var canvas = document.getElementById("canvas")
+			var ctx = canvas.getContext("2d")
+			var width
+			var height
+			var time = 0
+			const sz = 20
 
-.loading {
-	width: 500px;
-	height: 500px;
-	margin: auto;
-	background: url("https://i.imgur.com/jIQAYPO.png") no-repeat 100%/100%;
-	color: white;
-}
+			var resize = function () {
+					width = window.innerWidth
+					height = window.innerHeight
+					canvas.width = width
+					canvas.height = height
+			}
+			window.onresize = resize
+			resize()
 
-.loading::before, .loading::after {
-	content: '';
-	z-index: -1;
-	box-shadow: inset 0px 0px 0px 4px;
-	animation: clip 4s linear infinite;
-}
+			CanvasRenderingContext2D.prototype.line = function(x,y,x2,y2)
+			{
+					this.lineWidth = 5;
+					this.strokeStyle = "rgba(120,120,120,1)";
+					this.beginPath();
+					this.moveTo(x, y);
+					this.lineTo(x2, y2);
+					this.stroke();
 
-@keyframes clip {
-	0% {
-		clip: rect(0px, 500px, 2px, 0px);
-	}
+					return this;
+			}
 
-	25% {
-		clip: rect(0px, 2px, 500px, 0px);
-	}
+			var img = document.createElement("img");
+			img.src = "asset://mapimage/invalid_map"
 
-	50% {
-		clip: rect(498px, 500px, 500px, 0px);
-	}
+			var status = ""
+			function draw() {
+				var x = width / 2
+				var y = height / 2 + 20
+				ctx.drawImage(img,0,0,width,height)
 
-	75% {
-		clip: rect(0px, 500px, 500px, 498px);
-	}
+				ctx.fillStyle = "rgba(46,46,46,0.93)"
+				ctx.fillRect(0, 0, width, height)
+				ctx.fillStyle = "rgba(100,100,100,1)";
 
-	100% {
-		clip: rect(0px, 500px, 2px, 0px);
-	}
-}
+				var o = Math.cos(time / 4) * 15 + 35;
+				ctx.line(x - 140,y - 60 - o,x,y - 70 - 45 - o)
+				ctx.line(x + 140,y - 60 - o,x,y - 70 - 45 - o)				
+				
+				ctx.line(x - 140,y + 20 + o,x,y + 45 + 20 + o)
+				ctx.line(x + 140,y + 20 + o,x,y + 45 + 20 + o)
 
-html,
-body {
-	height: 100%;
-}
+				ctx.fillStyle = "white"
+				ctx.font = "64px Orbitron"
+				ctx.textAlign = "center"
+				ctx.fillText("ZetBox", x, y);
+			}
 
-body {
-	position: relative;
-	background-color: #121212;
-	overflow: hidden;
-}
-</style>
-<body>
-	<label id="lblStatus" style="color: whitesmoke" ></label>
-	<script type="text/javascript">
-		function SetStatusChanged( status )
-		{
-			document.getElementById('lblStatus').innerHTML = ( status + "<br>");
-		}
+			function GameDetails(_servername, serverurl, mapname, maxplayers, steamid, gamemode, volume, lang, gamemodeNice) 
+			{
+				img.src = "asset://mapimage/" + mapname;
+			}
 
-	</script>
-</body>
-<div class="loading"> </div>
-</html> 
+			const start = Date.now();
+			time = start;
+
+			const loop = function () {
+					const t = Date.now();
+					const t1 = 1e3 / 20;
+
+					draw()
+
+					while (time <= t + t1 / 4) time += t1;
+					setTimeout(loop, time - t);
+			};
+			loop()
+		</script>
+	</body>
+</html>
